@@ -1,13 +1,13 @@
 <template>
+<div>
   <img :src="logoURL" :alt="logoCaption" width="200" height="200" />
   <h1>{{ title }}</h1>
 
   <h2>Add a new task</h2>
-  <span
+  <h3 style="color:green"
     >You have {{ allTasks }} {{ allTasks > 1 ? 'tasks' : 'task' }} at the
-    moment</span
-  >
-
+    moment
+    </h3>
   <div>
     <input
       type="text"
@@ -15,16 +15,13 @@
       @keyup.enter="addTask"
       placeholder="Add a new task"
     />
-    <button @click="addTask" :disabled="newTask.length < 1">Add task</button>
+    <button style="margin-left:20px" @click="addTask" :disabled="newTask.length < 1">Add task</button>
   </div>
 
-  <div v-if="newTask.length > 0">
-    <h3>New task preview</h3>
-    <p>{{ newTask }}</p>
-  </div>
   <ul>
     <li
-      v-for="(task, index) in latest"
+    style="cursor:pointer; margin-top:10px; display:flex; gap:20px"
+      v-for="(task, i) in tasks"
       :key="task.id"
       @click="finishTask(task)"
       :class="[
@@ -33,19 +30,17 @@
         'simple-class',
       ]"
     >
-      {{ task.id }}. {{ task.name }}
+      <div>{{i + 1}}. {{ task.name }}</div>
 
       <div v-if="task.finished">
-        <button>Delete task</button>
+        <button @click="removeTask(task.id)">Delete task</button>
       </div>
       <div v-else-if="task.edit">
         <button>Edit task</button>
       </div>
-      <div v-else>
-        <p>No button</p>
-      </div>
     </li>
   </ul>
+  </div>
 </template>
 
 <script>
@@ -88,10 +83,7 @@ export default {
   computed: {
     allTasks() {
       return this.tasks.length;
-    },
-    latest() {
-      return [...this.tasks].reverse();
-    },
+    }
   },
 };
 </script>
